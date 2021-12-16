@@ -1,0 +1,7 @@
+selenium
+pandas
+fastAPI
+gunicorn
+uvicorn
+aiofiles
+jinja2
