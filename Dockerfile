@@ -24,7 +24,8 @@ RUN mkdir /app \
         libxfixes3 \
         libxrandr2 \
         xdg-utils \
-        libgdk-pixbuf2.0-0
+        libgdk-pixbuf2.0-0 \
+        xvfb
 
 WORKDIR /app
 
@@ -40,5 +41,9 @@ RUN pip install --upgrade pip \
     && chmod a+x applications/chromedriver
 
 COPY ./app/ .
+
+ENV DISPLAY=:20
+
+RUN Xvfb :20 -screen 0 1024x768x24 -nolisten tcp &
 
 ENTRYPOINT ["gunicorn", "--bind=0.0.0.0:8080", "--workers=3", "--worker-class=uvicorn.workers.UvicornWorker", "main:app"]

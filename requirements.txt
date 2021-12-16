@@ -5,3 +5,4 @@ gunicorn
 uvicorn
 aiofiles
 jinja2
+pyvirtualdisplay
