@@ -2,6 +2,10 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service 
 from selenium.webdriver.common.by import By
 
+from pyvirtualdisplay import Display
+
+from static.models.Ladder import Ladder
+
 import pandas as pd
 
 import time
@@ -46,7 +50,6 @@ categories=[ladder_xp,ladder_success,ladder_pvp_solo,ladder_pvp_duel]
 # -- Access to the requested ladder page
 def open_ladder(browser, category):
     time.sleep(5)
-    browser.save_screenshot('./save_screenshot_method.png')
     if browser.find_element(By.CLASS_NAME, "ak-refuse").is_displayed():
         close_cookie = browser.find_element(By.CLASS_NAME, "ak-refuse").click()
         time.sleep(1.5)
@@ -95,3 +98,24 @@ def export_dataframes():
     browser.quit()
     return dfs
 
+def export_dataframe(category):
+    display = Display(visible=0, size=(1027,768))
+    
+    display.start()
+    # Open browser in fullscreen
+    browser = webdriver.Chrome(service=s, options=option)
+    browser.maximize_window()
+    
+    # Access main menu URL
+    browser.get(main_url)
+    # Acces ladder page
+    open_ladder(browser, category)
+    # Filter ladder table
+    filter_ladder(browser, category)
+    # Create and stock dataframes
+    df = extract_data(browser)
+    data = Ladder.to_dict(category['caption'],df)
+    # Close browser
+    browser.quit()
+    display.stop()
+    return data
