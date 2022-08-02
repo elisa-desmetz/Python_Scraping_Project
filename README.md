@@ -10,5 +10,5 @@ docker build -t python-scrap .
 ```
 Run container
 ```
-docker run -p 8888:8080 python-scrap
+docker run -p 8888:8080 -d --name scrap python-scrap
 ```
